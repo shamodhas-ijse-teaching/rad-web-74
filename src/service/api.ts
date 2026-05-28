@@ -1,0 +1,24 @@
+import axios from "axios"
+
+const api = axios.create({
+  baseURL: "https://rad-service-74-beta.vercel.app/api/v1"
+  // baseURL: "http://localhost:5000/api/v1"
+})
+
+const PUBLIC_ENDPOINTS = ["/auth/login", "/auth/register", "/auth/refresh"]
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("ACCESS_TOKEN")
+
+  const isPublic = PUBLIC_ENDPOINTS.some((url) => config.url?.includes(url))
+
+  if (!isPublic && token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
+  return config
+})
+
+// api.interceptors.response
+
+export default api
