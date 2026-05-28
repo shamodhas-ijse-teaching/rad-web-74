@@ -14,6 +14,11 @@ export const login = async (email: string, password: string) => {
   return res.data
 }
 
+export const refreshTokenCall = async (refreshToken: string) => {
+  const res = await api.post("/auth/login", { refreshToken })
+  return res.data
+}
+
 export const getMyDetails = async () => {
   const res = await api.get("/auth/me")
   return res.data

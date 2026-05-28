@@ -1,4 +1,5 @@
-import axios from "axios"
+import axios, { AxiosError } from "axios"
+import { refreshTokenCall } from "./auth"
 
 const api = axios.create({
   baseURL: "https://rad-service-74-beta.vercel.app/api/v1"
@@ -19,6 +20,47 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// api.interceptors.response
+// api.interceptors.response.use(()=>{},()=>{})
+
+api.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  async (error: AxiosError) => {
+    const originalRequest: any = error.config
+
+    const isPublic = PUBLIC_ENDPOINTS.some((url) =>
+      originalRequest.url?.includes(url)
+    )
+
+    if (
+      !isPublic &&
+      error.response?.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true
+      try {
+        const refreshToken = localStorage.getItem("REFRESH_TOKEN") as string
+        if (!refreshToken) {
+          throw new Error("No refresh token available")
+        }
+        const refreshResponse = await refreshTokenCall(refreshToken)
+        const newAccessToken = refreshResponse.data.accessToken
+
+        localStorage.setItem("ACCESS_TOKEN", newAccessToken)
+
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+        return axios(originalRequest)
+      } catch (err) {
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+        window.location.href = "/login"
+        console.error(err)
+        return Promise.reject(error)
+      }
+    }
+    return Promise.reject(error)
+  }
+)
 
 export default api
