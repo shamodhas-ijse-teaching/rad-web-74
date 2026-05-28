@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* .flex {
+.flex {
   display: flex;
 }
 
@@ -14,4 +14,4 @@
 
 .bg-black {
   background-color: #000;
-} */
+}

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { getAllCustomer, saveCustomer } from '../service/customer'
+import { useEffect, useState } from "react"
+import { getAllCustomer, saveCustomer } from "../service/customer"
 
 const Customer = () => {
   const [customers, setCustomers] = useState([])
@@ -35,7 +35,7 @@ const Customer = () => {
         age,
         isAdmin
       }
-      const res = await saveCustomer(customer)
+      await saveCustomer(customer)
       console.log("Saved")
       alert("saved")
     } catch (err) {}
@@ -58,7 +58,7 @@ const Customer = () => {
         />
         <input
           checked={isAdmin}
-          onChange={(e) => setIsAdmin(!isAdmin)}
+          onChange={() => setIsAdmin(!isAdmin)}
           // e.target.checked
           type="checkbox"
           placeholder="is admin"

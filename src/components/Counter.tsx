@@ -1,4 +1,3 @@
-import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { decrement, increment, setValue } from "../redux/action/counterAction"
 

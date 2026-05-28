@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react"
+import { createContext, useState } from "react"
 import B from "./B"
 
 export const XContext = createContext<any>(null)
